@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Personal Webpage</title>
+  <link rel="stylesheet" type="text/css" href="fancy.css">
+</head>
+<body>
+  <h1>Welcome to My Personal Webpage</h1>
+
+  <p><strong>Lorem Impsum</strong> dolor sit <em>amet</em>, consectetur adipiscing elit. Praesent ullamcorper erat quis elit pharetra, eu molestie sapien imperdiet. Curabitur vel dui magna. Pellentesque venenatis neque eu feugiat dictum. Sed nec auctor velit. Aenean bibendum lectus orci, sit amet iaculis nisi gravida quis. Mauris imperdiet erat ante, in porta odio tincidunt non. Cras ac erat non neque tempus porta. Donec consectetur dapibus justo, eu bibendum erat. Curabitur imperdiet facilisis nulla sit amet rhoncus. Phasellus sit amet laoreet orci, eu tristique enim. Cras lectus nisl, dignissim vel faucibus a, volutpat eget purus. Curabitur aliquet ex urna, cursus luctus ipsum luctus ut.</p>
+  <p></p>
+  <p>Duis facilisis aliquam nunc, a tincidunt nunc fermentum eget. Aenean risus diam, vulputate non massa et, tincidunt molestie enim. Duis placerat mollis tortor, at aliquet libero gravida sed. Duis at erat at tellus facilisis dictum lobortis et tortor. Interdum et malesuada fames ac ante ipsum primis in faucibus. Vestibulum vitae euismod nulla. <Strong>Maecenas</Strong> mollis quis orci vitae tincidunt. <em>Nulla facilisi</em>.</p>
+  <p></p>
+  <p>Suspendisse potenti. Aliquam at faucibus eros, sed tempor velit. <Strong>Quisque</Strong> mattis dui urna, et ullamcorper lectus aliquam a. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sed lectus vehicula, rhoncus diam ut, interdum nulla. Maecenas scelerisque turpis a lectus mattis, eu rutrum ex pulvinar. Integer viverra rhoncus felis ut convallis. Proin vitae justo orci. <em>Phasellus tempor mauris quis sollicitudin tincidunt</em>. Duis ipsum velit, luctus ac felis eu, condimentum pulvinar sem. Nunc at efficitur est. Suspendisse elementum lorem quis lectus rutrum, nec varius sapien faucibus. Cras placerat eros et ultrices finibus. Duis feugiat tellus volutpat lobortis blandit.</p>
+  <p></p>
+  <p>Proin placerat commodo tellus, in congue leo dictum quis. Donec eleifend <em>dapibus ipsum</em>, vel posuere magna lobortis id. Fusce bibendum mauris id risus fringilla mattis. Curabitur volutpat sollicitudin porta. Curabitur sit amet sapien consequat, efficitur eros a, euismod diam. Nam egestas sollicitudin condimentum. Nulla at tincidunt turpis. Etiam eget sem sit amet leo commodo lobortis ac vel augue. Praesent sed augue sed orci consectetur posuere et id justo. Aliquam mauris odio, gravida et lorem in, fringilla sagittis libero. Praesent porta risus nisi, aliquam lacinia augue accumsan laoreet. Donec enim dolor, congue ut venenatis nec, semper interdum leo. Fusce lacus sem, lacinia commodo pellentesque et, consectetur quis ante. <Strong>Curabitur</Strong> hendrerit massa ut eros pulvinar ornare.</p>
+  <p></p>
+
+  <a href="about.html">About Me</a> | <a href="resume.html">Resume</a>
+
+  #app {
+    text-align: center;
+    margin-top: 50px;
+}
+.board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+    gap: 5px;
+    margin: 20px auto;
+    width: 320px;
+}
+.cell {
+    width: 100px;
+    height: 100px;
+    font-size: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #333;
+    cursor: pointer;
+    background-color: #f0f0f0;
+}
+.cell:hover {
+    background-color: #ddd;
+}
+.winner {
+    font-weight: bold;
+    font-size: 1.5em;
+    color: green;
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+<h1>Tic-Tac-Toe Game</h1>
+
+<div class="board">
+    <div 
+        v-for="(cell, index) in board" 
+        :key="index" 
+        class="cell" 
+        @click="makeMove(index)"
+    >
+        {{ cell }}
+    </div>
+</div>
+
+<p v-if="winner" class="winner">{{ winner }} wins!</p>
+<p v-else-if="isDraw" class="winner">It's a draw!</p>
+
+<button @click="resetGame">Reset Game</button>
+</div>
+
+<script>src="https://cdn.jsdelivr.net/npm/vue@2.6.14"</script>
+<script>
+new Vue({
+    el: '#app',
+    data: {
+        board: Array(9).fill(''),
+        currentPlayer: 'X',
+        winner: null
+    },
+    computed: {
+        isDraw() {
+            return !this.board.includes('') && !this.winner;
+        }
+    },
+    methods: {
+        makeMove(index) {
+        
+            if (this.board[index] || this.winner) return;
+
+            this.$set(this.board, index, this.currentPlayer);
+
+            if (this.checkWinner()) {
+                this.winner = `${this.currentPlayer}`;
+            } else {
+
+                this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X';
+            }
+        },
+        checkWinner() {
+
+            const winningCombinations = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8],
+                [0, 3, 6], [1, 4, 7], [2, 5, 8],
+                [0, 4, 8], [2, 4, 6]
+            ];
+
+            return winningCombinations.some(combination => {
+                const [a, b, c] = combination;
+                return (
+                    this.board[a] &&
+                    this.board[a] === this.board[b] &&
+                    this.board[a] === this.board[c]
+                );
+            });
+        },
+        resetGame() {
+            this.board = Array(9).fill('');
+            this.currentPlayer = 'X';
+            this.winner = null;
+        }
+    }
+});
+</script>
+
+</body>
+</html>
+  
+</body>
+</html>

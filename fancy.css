@@ -1,0 +1,17 @@
+body {
+    background-color: #aaa59a;
+    font-family: Arial, sans-serif;
+  }
+  
+  h1, h2 {
+    font-size: 2em;
+    color: #ffffff;
+  }
+  
+  a {
+    color: #2a91f9;
+  }
+  
+  p {
+    font-size: 1.1em;
+  }
